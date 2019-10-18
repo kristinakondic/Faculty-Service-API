@@ -19,6 +19,7 @@ import ftn.FacultyService.entity.Student;
 import ftn.FacultyService.entity.Subject;
 import ftn.FacultyService.entity.User;
 import ftn.FacultyService.repository.ExamRepository;
+import ftn.FacultyService.repository.FieldsOfStudyRepository;
 import ftn.FacultyService.repository.StudentRepository;
 import ftn.FacultyService.repository.SubjectRepository;
 import ftn.FacultyService.repository.UserRepository;
@@ -37,6 +38,9 @@ public class SubjectService {
 	
 	@Autowired
 	ExamRepository examRepository;
+	
+	@Autowired
+	FieldsOfStudyRepository fsRepository;
 
 	public Page<SubjectDTO> getAllPage(Integer page, Integer size) {
 		PageRequest pr = PageRequest.of(page, size);
@@ -60,7 +64,7 @@ public class SubjectService {
 			subject.setName(subjectDTO.getName());
 			subject.setSubjectNo(subjectDTO.getSubjectNo());
 			subject.setYear(subjectDTO.getYear());
-			subject.setFieldsOfStudy(new FieldsOfStudy(subjectDTO.getFieldsOfStudyDTO()));
+			subject.setFieldsOfStudy(fsRepository.findByName(subjectDTO.getFieldsOfStudyDTO().getName()));
 			subjectRepository.save(subject);
 			return true;
 		} else {

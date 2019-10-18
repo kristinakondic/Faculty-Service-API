@@ -48,7 +48,6 @@ public class ExamService {
 			exam.setType(examDTO.getType());
 			exam.setClassroom(examDTO.getClassroom());
 			exam.setDate(examDTO.getDate());
-			System.out.println(examDTO.getExamPeriod() == null);
 			exam.setSubject(subjectRepository.findByName(examDTO.getSubject().getName()));
 			exam.setExamPeriod(expRepository.findByName(examDTO.getExamPeriod().getName()));
 			examRepository.save(exam);

@@ -6,4 +6,5 @@ import ftn.FacultyService.entity.FieldsOfStudy;
 
 public interface FieldsOfStudyRepository extends JpaRepository<FieldsOfStudy, Integer> {
 
+	FieldsOfStudy findByName (String name);
 }

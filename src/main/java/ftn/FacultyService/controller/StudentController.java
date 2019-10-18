@@ -41,6 +41,16 @@ public class StudentController {
 
 		return new ResponseEntity<StudentDTO>(student, HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "/email/{email}")
+	public ResponseEntity<StudentDTO> getByEmail(@PathVariable("email") String email) {
+		StudentDTO student = studentService.getByEmail(email);
+		if (student == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<StudentDTO>(student, HttpStatus.OK);
+	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST, consumes = "application/json")
 	public ResponseEntity<MessageDTO> register(@RequestBody StudentDTO studentDTO) {

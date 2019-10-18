@@ -8,6 +8,7 @@ public class StudentDTO {
 	private String indexNo;
 	private int yearOfStudy;
 	private UserDTO userDTO;
+	private double accountStatus;
 
 	public StudentDTO() {
 
@@ -19,9 +20,19 @@ public class StudentDTO {
 		this.yearOfStudy = yearOfStudy;
 		this.userDTO = userDTO;
 	}
+	
 
 	public StudentDTO(Student student) {
 		this(student.getId(), student.getIndexNo(), student.getYearOfStudy(), new UserDTO(student.getUser()));
+	}
+	
+
+	public double getAccountStatus() {
+		return accountStatus;
+	}
+
+	public void setAccountStatus(double accountStatus) {
+		this.accountStatus = accountStatus;
 	}
 
 	public int getId() {

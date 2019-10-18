@@ -1,5 +1,7 @@
 package ftn.FacultyService.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -8,8 +10,12 @@ import org.springframework.stereotype.Service;
 
 import ftn.FacultyService.dto.MessageDTO;
 import ftn.FacultyService.dto.StudentDTO;
+import ftn.FacultyService.entity.ExamParticipation;
+import ftn.FacultyService.entity.Payment;
 import ftn.FacultyService.entity.Student;
 import ftn.FacultyService.entity.User;
+import ftn.FacultyService.repository.ExamParticipationRepository;
+import ftn.FacultyService.repository.PaymentRepository;
 import ftn.FacultyService.repository.StudentRepository;
 import ftn.FacultyService.repository.UserRepository;
 
@@ -20,6 +26,12 @@ public class StudentService {
 	StudentRepository studentRepository;
 	@Autowired
 	UserRepository userRepository;
+	@Autowired
+	UserService userService;
+	@Autowired
+	PaymentRepository paymentRepo;
+	@Autowired
+	ExamParticipationRepository examPartRepo;
 
 	public Page<StudentDTO> getAllPage(Integer page, Integer size) {
 		PageRequest pr = PageRequest.of(page, size);
@@ -34,6 +46,38 @@ public class StudentService {
 			return null;
 		} else {
 			return new StudentDTO(student);
+		}
+	}
+	
+	public StudentDTO getByEmail(String email) {
+		//User user = new User(userService.getUser(email));
+		User user = userRepository.findByEmail(email);
+		Student student = user.getStudent();
+		double accStatus = 0;
+		
+		List<Payment> allPayments = paymentRepo.findAll();
+		List<ExamParticipation> allParticipations = examPartRepo.findAll();
+		
+		for(Payment payment : allPayments) {
+			if(payment.getStudent().getId() == student.getId()) {
+				accStatus = accStatus + payment.getValue();
+			}
+		}
+		
+		for(ExamParticipation participation : allParticipations) {
+			if(participation.getStudent().getId() == student.getId()) {
+				accStatus -= 200;
+			}
+		}
+		
+		
+		if (student == null) {
+			return null;
+		} else {
+			StudentDTO studentDTO = new StudentDTO(student);
+			studentDTO.setAccountStatus(accStatus);
+			studentDTO.setUserDTO(null);
+			return studentDTO;
 		}
 	}
 
